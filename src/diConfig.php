@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use corbomite\di\Di;
 use corbomite\db\Factory as OrmFactory;
+use src\app\schedule\services\SaveScheduleService;
 use corbomite\schedule\services\GetScheduleService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\schedule\actions\CreateMigrationsAction;
@@ -29,5 +30,8 @@ return [
             new OrmFactory(),
             Di::get(ScheduleCollectorService::class)
         );
+    },
+    SaveScheduleService::class => function () {
+        return new SaveScheduleService(new OrmFactory());
     },
 ];

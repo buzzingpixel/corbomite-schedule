@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use corbomite\di\Di;
+use corbomite\schedule\ScheduleApi;
 use corbomite\db\Factory as OrmFactory;
 use src\app\schedule\services\SaveScheduleService;
 use corbomite\schedule\services\GetScheduleService;
@@ -33,5 +34,8 @@ return [
     },
     SaveScheduleService::class => function () {
         return new SaveScheduleService(new OrmFactory());
+    },
+    ScheduleApi::class => function () {
+        return new ScheduleApi(new Di());
     },
 ];

@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  php:
+    image: buzzingpixel/php7.2:latest
+    container_name: php-corbomite-schedule
+    environment:
+      HOSTNAME: php-corbomite-schedule
+    user: "1000:50"
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - ./dev/null:/app/node_modules:delegated
+      - ./serverConfig/php/php-custom-config.ini:/usr/local/etc/php/conf.d/php-custom-config.ini:delegated
+      - ./serverConfig/php/php-config-dev.ini:/usr/local/etc/php/conf.d/php-env-config.ini:delegated
+  db:
+    image: buzzingpixel/mariadb:latest
+    container_name: db-corbomite-schedule
+    restart: always
+    environment:
+      HOSTNAME: db-corbomite-schedule
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: site
+      MYSQL_DATABASE: site
+      MYSQL_PASSWORD: secret
+    user: "1000:50"
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - ./dev/null:/app/node_modules:delegated
+      - db-data:/var/lib/mysql:delegated
+    ports:
+      - "26758:3306"
+  utility:
+    image: ubuntu:latest
+    container_name: utility-corbomite-schedule
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - db-data:/var/lib/mysql
+    command: bash -c "while true; do chmod -R 0777 /var/lib/mysql; sleep 5; done"
+
+volumes:
+  db-data:

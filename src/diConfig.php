@@ -7,6 +7,9 @@ declare(strict_types=1);
  * @license Apache-2.0
  */
 
+use corbomite\di\Di;
+use corbomite\db\Factory as OrmFactory;
+use corbomite\schedule\services\GetScheduleService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\schedule\actions\CreateMigrationsAction;
 use corbomite\schedule\services\ScheduleCollectorService;
@@ -20,5 +23,11 @@ return [
     },
     ScheduleCollectorService::class => function () {
         return new ScheduleCollectorService();
+    },
+    GetScheduleService::class => function () {
+        return new GetScheduleService(
+            new OrmFactory(),
+            Di::get(ScheduleCollectorService::class)
+        );
     },
 ];

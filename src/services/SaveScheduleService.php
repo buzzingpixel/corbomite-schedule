@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * @author TJ Draper <tj@buzzingpixel.com>
+ * @copyright 2019 BuzzingPixel, LLC
+ * @license Apache-2.0
+ */
+
 namespace src\app\schedule\services;
 
 use corbomite\db\Factory as OrmFactory;

@@ -10,12 +10,12 @@ declare(strict_types=1);
 use corbomite\di\Di;
 use corbomite\schedule\ScheduleApi;
 use corbomite\db\Factory as OrmFactory;
+use corbomite\configcollector\Collector;
 use corbomite\schedule\actions\RunScheduleAction;
 use corbomite\schedule\services\GetScheduleService;
 use corbomite\schedule\services\SaveScheduleService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\schedule\actions\CreateMigrationsAction;
-use corbomite\schedule\services\ScheduleCollectorService;
 
 return [
     CreateMigrationsAction::class => function () {
@@ -27,13 +27,10 @@ return [
     RunScheduleAction::class => function () {
         return new RunScheduleAction(new Di(), new ConsoleOutput());
     },
-    ScheduleCollectorService::class => function () {
-        return new ScheduleCollectorService();
-    },
     GetScheduleService::class => function () {
         return new GetScheduleService(
             new OrmFactory(),
-            Di::get(ScheduleCollectorService::class)
+            Di::get(Collector::class)
         );
     },
     SaveScheduleService::class => function () {

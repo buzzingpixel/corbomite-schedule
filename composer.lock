@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b9d053f24d82e045f0215e881255354",
+    "content-hash": "81675bfb0ace647eb3882a03305ea821",
     "packages": [
         {
             "name": "atlas/cli",
@@ -417,6 +417,51 @@
             "time": "2019-01-02T03:08:29+00:00"
         },
         {
+            "name": "buzzingpixel/corbomite-config-collector",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/buzzingpixel/corbomite-config-collector.git",
+                "reference": "cd254a7482b3968f55f955ca49823d988f4c5afd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/buzzingpixel/corbomite-config-collector/zipball/cd254a7482b3968f55f955ca49823d988f4c5afd",
+                "reference": "cd254a7482b3968f55f955ca49823d988f4c5afd",
+                "shasum": ""
+            },
+            "require": {
+                "buzzingpixel/corbomite-di": "^1.0",
+                "ext-json": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^7.5",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "extra": {
+                "diConfigFilePath": "src/diConfig.php"
+            },
+            "autoload": {
+                "psr-4": {
+                    "corbomite\\configcollector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "TJ Draper",
+                    "email": "tj@buzzingpixel.com",
+                    "homepage": "https://buzzingpixel.com"
+                }
+            ],
+            "description": "Corbomite Config Collector",
+            "time": "2019-01-11T22:04:36+00:00"
+        },
+        {
             "name": "buzzingpixel/corbomite-db",
             "version": "1.0.2",
             "source": {
@@ -463,20 +508,20 @@
         },
         {
             "name": "buzzingpixel/corbomite-di",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/buzzingpixel/corbomite-di.git",
-                "reference": "ac2d34e8099f8022a69f275bcdfd462ec6d4dd93"
+                "reference": "4168dc58b1dd9f6dd07bc9d138a447b6a7b32877"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/buzzingpixel/corbomite-di/zipball/ac2d34e8099f8022a69f275bcdfd462ec6d4dd93",
-                "reference": "ac2d34e8099f8022a69f275bcdfd462ec6d4dd93",
+                "url": "https://api.github.com/repos/buzzingpixel/corbomite-di/zipball/4168dc58b1dd9f6dd07bc9d138a447b6a7b32877",
+                "reference": "4168dc58b1dd9f6dd07bc9d138a447b6a7b32877",
                 "shasum": ""
             },
             "require": {
-                "composer/composer": "^1.8",
+                "buzzingpixel/corbomite-config-collector": "^1.0.1",
                 "ext-json": "*",
                 "php": ">=7.2",
                 "php-di/php-di": "^6.0"
@@ -498,7 +543,7 @@
             ],
             "description": "Corbomite DI",
             "homepage": "https://buzzingpixel.com/",
-            "time": "2018-12-29T20:16:38+00:00"
+            "time": "2019-01-11T22:13:36+00:00"
         },
         {
             "name": "buzzingpixel/corbomite-migrations",
@@ -4462,8 +4507,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1",
-        "ext-json": "*"
+        "php": ">=7.1"
     },
     "platform-dev": []
 }

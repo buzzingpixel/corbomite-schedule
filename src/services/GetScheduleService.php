@@ -12,6 +12,7 @@ namespace corbomite\schedule\services;
 use DateTime;
 use DateTimeZone;
 use corbomite\db\Factory as OrmFactory;
+use corbomite\configcollector\Collector;
 use corbomite\schedule\models\ScheduleItemModel;
 use corbomite\schedule\data\ScheduleTracking\ScheduleTracking;
 
@@ -22,11 +23,13 @@ class GetScheduleService
 
     public function __construct(
         OrmFactory $ormFactory,
-        ScheduleCollectorService $scheduleConfigCollector
+        Collector $configCollector
     ) {
         $this->ormFactory = $ormFactory;
         $this->scheduleConfig = $this->populateModelDbVals(
-            $this->convertConfigToModels($scheduleConfigCollector())
+            $this->convertConfigToModels(
+                $configCollector('scheduleConfigFilePath')
+            )
         );
     }
 

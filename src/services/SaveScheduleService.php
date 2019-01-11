@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license Apache-2.0
  */
 
-namespace src\app\schedule\services;
+namespace corbomite\schedule\services;
 
 use corbomite\db\Factory as OrmFactory;
 use corbomite\schedule\models\ScheduleItemModel;

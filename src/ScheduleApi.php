@@ -11,8 +11,8 @@ namespace corbomite\schedule;
 
 use corbomite\di\Di;
 use corbomite\schedule\models\ScheduleItemModel;
-use src\app\schedule\services\SaveScheduleService;
 use corbomite\schedule\services\GetScheduleService;
+use corbomite\schedule\services\SaveScheduleService;
 
 class ScheduleApi
 {

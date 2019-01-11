@@ -1,0 +1,31 @@
+{
+    "name": "buzzingpixel/corbomite-schedule",
+    "version": "1.0.0",
+    "description": "Corbomite Schedule",
+    "authors": [
+        {
+            "name": "TJ Draper",
+            "email": "tj@buzzingpixel.com",
+            "homepage": "https://buzzingpixel.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.4",
+        "phpmd/phpmd": "^2.6",
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "corbomite\\schedule\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "corbomite\\tests\\": "tests/"
+        }
+    }
+}

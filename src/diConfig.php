@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\schedule\actions\CreateMigrationsAction;
+use corbomite\schedule\services\ScheduleCollectorService;
 
 return [
     CreateMigrationsAction::class => function () {
@@ -16,5 +17,8 @@ return [
             __DIR__ . '/migrations',
             new ConsoleOutput()
         );
+    },
+    ScheduleCollectorService::class => function () {
+        return new ScheduleCollectorService();
     },
 ];

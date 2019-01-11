@@ -88,6 +88,10 @@ class GetScheduleService
             $guids[$model->guid()] = $model->guid();
         }
 
+        if (! $guids) {
+            return [];
+        }
+
         $records = $this->ormFactory->makeOrm()->select(ScheduleTracking::class)
             ->where('guid IN ', array_values($guids))
             ->fetchRecords();

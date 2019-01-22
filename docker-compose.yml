@@ -11,7 +11,6 @@ services:
       - .:/app:delegated
       - ./dev/null:/app/.git:delegated
       - ./dev/null:/app/.idea:delegated
-      - ./dev/null:/app/node_modules:delegated
       - ./serverConfig/php/php-custom-config.ini:/usr/local/etc/php/conf.d/php-custom-config.ini:delegated
       - ./serverConfig/php/php-config-dev.ini:/usr/local/etc/php/conf.d/php-env-config.ini:delegated
   db:
@@ -29,12 +28,11 @@ services:
       - .:/app:delegated
       - ./dev/null:/app/.git:delegated
       - ./dev/null:/app/.idea:delegated
-      - ./dev/null:/app/node_modules:delegated
       - db-data:/var/lib/mysql:delegated
     ports:
       - "26758:3306"
   utility:
-    image: ubuntu:latest
+    image: buzzingpixel/utility:latest
     container_name: utility-corbomite-schedule
     volumes:
       - .:/app:delegated

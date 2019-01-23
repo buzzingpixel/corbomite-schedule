@@ -47,57 +47,51 @@ class ScheduleItemModel
 
     public function class(?string $class = null): string
     {
-        return $this->class = $class !== null ? $class : $this->class;
+        return $this->class = $class ?? $this->class;
     }
 
     private $method = '__invoke';
 
     public function method(?string $method = null): string
     {
-        return $this->method = $method !== null ? $method : $this->method;
+        return $this->method = $method ?? $this->method;
     }
 
     private $runEvery = 'Always';
 
     public function runEvery(?string $runEvery = null): string
     {
-        return $this->runEvery = $runEvery !== null ?
-            $runEvery :
-            $this->runEvery;
+        return $this->runEvery = $runEvery ?? $this->runEvery;
     }
 
     private $guid = '';
 
     public function guid(?string $guid = null): string
     {
-        return $this->guid = $guid !== null ? $guid : $this->guid;
+        return $this->guid = $guid ?? $this->guid;
     }
 
     private $isRunning = false;
 
     public function isRunning(?bool $isRunning = null): bool
     {
-        return $this->isRunning = $isRunning !== null ?
-            $isRunning :
-            $this->isRunning;
+        return $this->isRunning = $isRunning ?? $this->isRunning;
     }
 
+    /** @var DateTime|null */
     private $lastRunStartAt;
 
     public function lastRunStartAt(?DateTime $lastRunStartAt = null): ?DateTime
     {
-        return $this->lastRunStartAt = $lastRunStartAt !== null ?
-            $lastRunStartAt :
-            $this->lastRunStartAt;
+        return $this->lastRunStartAt = $lastRunStartAt ?? $this->lastRunStartAt;
     }
 
+    /** @var DateTime|null */
     private $lastRunEndAt;
 
     public function lastRunEndAt(?DateTime $lastRunEndAt = null): ?DateTime
     {
-        return $this->lastRunEndAt = $lastRunEndAt !== null ?
-            $lastRunEndAt :
-            $this->lastRunEndAt;
+        return $this->lastRunEndAt = $lastRunEndAt ?? $this->lastRunEndAt;
     }
 
     /**

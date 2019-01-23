@@ -1,6 +1,6 @@
 {
     "name": "buzzingpixel/corbomite-schedule",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "Corbomite Schedule",
     "authors": [
         {
@@ -13,7 +13,7 @@
         "php": ">=7.1",
         "buzzingpixel/corbomite-di": "^1.0",
         "buzzingpixel/corbomite-migrations": "^1.0",
-        "buzzingpixel/corbomite-db": "^1.0",
+        "buzzingpixel/corbomite-db": "^1.2.1",
         "buzzingpixel/corbomite-config-collector": "^1.0"
     },
     "require-dev": {

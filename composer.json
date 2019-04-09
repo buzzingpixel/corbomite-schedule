@@ -15,7 +15,8 @@
         "buzzingpixel/corbomite-config-collector": "^1.0",
         "buzzingpixel/corbomite-db": "^1.2.1",
         "buzzingpixel/corbomite-di": "^1.0",
-        "buzzingpixel/corbomite-migrations": "^1.0"
+        "buzzingpixel/corbomite-migrations": "^1.0",
+        "symfony/filesystem": "^4.2"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.26.2",

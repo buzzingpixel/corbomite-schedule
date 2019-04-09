@@ -22,7 +22,7 @@ After running that command, you'll need to run the migrations:
 php app migrate/up
 ```
 
-### Running the queue
+### Running the schedule
 
 In dev, you'll probably just want to run the schedule manually. The command to do that is:
 

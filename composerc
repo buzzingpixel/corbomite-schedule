@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-cmd="php "${@};
+cmd="composer "${@};
 
 docker exec -it --user root --workdir /app php-corbomite-schedule bash -c "${cmd}"

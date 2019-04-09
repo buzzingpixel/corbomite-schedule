@@ -1,3 +1,3 @@
 @echo off
 
-docker-compose down
+docker-compose -f docker-compose.yml -p corbomite-schedule down

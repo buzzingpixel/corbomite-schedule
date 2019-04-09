@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-docker-compose up -d
+docker-compose -f docker-compose.yml -p corbomite-schedule up -d
+docker exec -it --user root --workdir /app php-corbomite-schedule bash -c "cd /app && composer install"

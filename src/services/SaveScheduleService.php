@@ -20,6 +20,11 @@ class SaveScheduleService
 
     public function __invoke(ScheduleItemModel $model) : void
     {
+        $this->save($model);
+    }
+
+    public function save(ScheduleItemModel $model) : void
+    {
         if (! $model->guid()) {
             return;
         }

@@ -20,20 +20,15 @@ class ScheduleApi
     }
 
     /**
-     * @return mixed[]
+     * @return ScheduleItemModel[]
      */
     public function getSchedule() : array
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->get(GetScheduleService::class);
-
-        return $service();
+        return $this->di->get(GetScheduleService::class)->get();
     }
 
     public function saveSchedule(ScheduleItemModel $model) : void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->get(SaveScheduleService::class);
-        $service($model);
+        $this->di->get(SaveScheduleService::class)->save($model);
     }
 }

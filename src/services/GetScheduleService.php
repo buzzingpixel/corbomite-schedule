@@ -39,6 +39,14 @@ class GetScheduleService
      */
     public function __invoke() : array
     {
+        return $this->get();
+    }
+
+    /**
+     * @return ScheduleItemModel[]
+     */
+    public function get() : array
+    {
         return $this->scheduleConfig;
     }
 

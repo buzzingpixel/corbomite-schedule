@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace corbomite\schedule\actions;
 
-use corbomite\di\Di;
 use corbomite\schedule\models\ScheduleItemModel;
 use corbomite\schedule\ScheduleApi;
 use DateTime;
 use DateTimeZone;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use function array_map;
@@ -16,22 +16,22 @@ use function count;
 
 class RunScheduleAction
 {
-    /** @var Di */
+    /** @var ContainerInterface */
     private $di;
-    /** @var ScheduleApi|mixed */
+    /** @var ScheduleApi */
     private $scheduleApi;
     /** @var OutputInterface */
     private $consoleOutput;
 
     public function __construct(
-        Di $di,
+        ContainerInterface $di,
         OutputInterface $consoleOutput
     ) {
         $this->di            = $di;
         $this->consoleOutput = $consoleOutput;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->scheduleApi = $di->getFromDefinition(ScheduleApi::class);
+        $this->scheduleApi = $di->get(ScheduleApi::class);
     }
 
     public function __invoke() : void
@@ -100,9 +100,9 @@ class RunScheduleAction
         $constructedClass = null;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        if ($this->di->hasDefinition($model->class())) {
+        if ($this->di->has($model->class())) {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $constructedClass = $this->di->makeFromDefinition($model->class());
+            $constructedClass = $this->di->get($model->class());
         }
 
         if (! $constructedClass) {

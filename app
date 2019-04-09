@@ -25,5 +25,5 @@ putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 require APP_VENDOR_PATH . '/autoload.php';
 
 /** @noinspection PhpUnhandledExceptionInspection */
-Di::get(Kernel::class)($argv);
+Di::diContainer()->get(Kernel::class)($argv);
 exit();

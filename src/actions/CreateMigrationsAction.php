@@ -1,22 +1,24 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\schedule\actions;
 
-use RegexIterator;
-use LogicException;
 use DirectoryIterator;
+use LogicException;
+use RegexIterator;
 use Symfony\Component\Console\Output\OutputInterface;
+use function copy;
+use function defined;
+use function file_exists;
+use function realpath;
+use function str_replace;
 
 class CreateMigrationsAction
 {
+    /** @var string */
     private $srcDir;
+    /** @var OutputInterface */
     private $output;
 
     public function __construct(
@@ -27,7 +29,7 @@ class CreateMigrationsAction
         $this->output = $output;
     }
 
-    public function __invoke()
+    public function __invoke() : void
     {
         if (! defined('APP_BASE_PATH')) {
             throw new LogicException('APP_BASE_PATH must be defined');
@@ -38,7 +40,7 @@ class CreateMigrationsAction
         }
 
         $phinxConf = include APP_BASE_PATH . '/phinx.php';
-        $dest = $phinxConf['paths']['migrations'] ?? null;
+        $dest      = $phinxConf['paths']['migrations'] ?? null;
 
         if (! $dest) {
             throw new LogicException('Migrations path must be defined in phinx conf');
@@ -52,7 +54,7 @@ class CreateMigrationsAction
             throw new LogicException('Migrations path could not be resolved');
         }
 
-        $iterator = new \RegexIterator(
+        $iterator = new RegexIterator(
             new DirectoryIterator($this->srcDir),
             '/^.+\.php$/i',
             RegexIterator::GET_MATCH
@@ -60,7 +62,7 @@ class CreateMigrationsAction
 
         foreach ($iterator as $files) {
             foreach ($files as $file) {
-                $path = $this->srcDir . '/' . $file;
+                $path     = $this->srcDir . '/' . $file;
                 $destPath = $dest . '/' . $file;
 
                 if (file_exists($destPath)) {

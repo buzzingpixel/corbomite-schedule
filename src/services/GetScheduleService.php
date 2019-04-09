@@ -1,31 +1,32 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\schedule\services;
 
+use corbomite\configcollector\Collector;
+use corbomite\db\Factory as OrmFactory;
+use corbomite\schedule\data\ScheduleTracking\ScheduleTracking;
+use corbomite\schedule\models\ScheduleItemModel;
 use DateTime;
 use DateTimeZone;
-use corbomite\db\Factory as OrmFactory;
-use corbomite\configcollector\Collector;
-use corbomite\schedule\models\ScheduleItemModel;
-use corbomite\schedule\data\ScheduleTracking\ScheduleTracking;
+use function array_values;
+use function implode;
+use function mb_strtolower;
+use function md5;
 
 class GetScheduleService
 {
+    /** @var OrmFactory */
     private $ormFactory;
+    /** @var ScheduleItemModel[] */
     private $scheduleConfig;
 
     public function __construct(
         OrmFactory $ormFactory,
         Collector $configCollector
     ) {
-        $this->ormFactory = $ormFactory;
+        $this->ormFactory     = $ormFactory;
         $this->scheduleConfig = $this->populateModelDbVals(
             $this->convertConfigToModels(
                 $configCollector('scheduleConfigFilePath')
@@ -36,15 +37,17 @@ class GetScheduleService
     /**
      * @return ScheduleItemModel[]
      */
-    public function __invoke(): array
+    public function __invoke() : array
     {
         return $this->scheduleConfig;
     }
 
     /**
+     * @param mixed[] $scheduleConfig
+     *
      * @return ScheduleItemModel[]
      */
-    private function convertConfigToModels(array $scheduleConfig): array
+    private function convertConfigToModels(array $scheduleConfig) : array
     {
         $models = [];
 
@@ -53,7 +56,7 @@ class GetScheduleService
                 continue;
             }
 
-            $runEvery = strtolower($item['runEvery']);
+            $runEvery = mb_strtolower($item['runEvery']);
 
             if (! isset(ScheduleItemModel::RUN_EVERY_MAP[$runEvery])) {
                 continue;
@@ -66,7 +69,7 @@ class GetScheduleService
             $model->guid(md5(implode('-', [
                 $model->class(),
                 $model->method(),
-                $model->runEvery()
+                $model->runEvery(),
             ])));
 
             $models[] = $model;
@@ -77,9 +80,10 @@ class GetScheduleService
 
     /**
      * @param ScheduleItemModel[] $scheduleModels
+     *
      * @return ScheduleItemModel[]
      */
-    private function populateModelDbVals(array $scheduleModels): array
+    private function populateModelDbVals(array $scheduleModels) : array
     {
         $guids = [];
 
@@ -88,7 +92,7 @@ class GetScheduleService
 
         foreach ($scheduleModels as $model) {
             $modelsByGuid[$model->guid()] = $model;
-            $guids[$model->guid()] = $model->guid();
+            $guids[$model->guid()]        = $model->guid();
         }
 
         if (! $guids) {
@@ -100,7 +104,7 @@ class GetScheduleService
             ->fetchRecords();
 
         foreach ($records as $record) {
-            $guid = $record->guid;
+            $guid  = $record->guid;
             $model = $modelsByGuid[$guid];
 
             $model->isRunning((bool) $record->is_running);

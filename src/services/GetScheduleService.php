@@ -113,7 +113,11 @@ class GetScheduleService
 
         foreach ($records as $record) {
             $guid  = $record->guid;
-            $model = $modelsByGuid[$guid];
+            $model = $modelsByGuid[$guid] ?? null;
+
+            if (! $model) {
+                continue;
+            }
 
             $model->isRunning((bool) $record->is_running);
 

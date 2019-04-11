@@ -210,9 +210,24 @@ class ScheduleItemModelTest extends TestCase
         self::assertEquals('dayatmidnight', $model->getTranslatedRunEvery());
     }
 
+    /**
+     * @throws  Throwable
+     */
     public function testShouldRunFalse() : void
     {
-        $model = new ScheduleItemModel();
+        $midNight = DateTimeImmutable::createFromFormat(
+            'Y-m-d H:i:s a',
+            '2000-01-09 3:01:00 am'
+        );
+
+        $getCurrentDateTime = self::createMock(GetCurrentDateTimeService::class);
+
+        $getCurrentDateTime->expects(self::once())
+            ->method('get')
+            ->willReturn($midNight);
+
+        /** @noinspection PhpParamsInspection */
+        $model = new ScheduleItemModel($getCurrentDateTime);
 
         $model->runEvery('DayAtMidnight');
 

@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace corbomite\schedule\models;
 
-use DateTime;
+use corbomite\schedule\services\GetCurrentDateTimeService;
+use DateTimeImmutable;
+use DateTimeInterface;
 use function is_numeric;
 use function mb_strtolower;
 
 class ScheduleItemModel
 {
+    /** @var GetCurrentDateTimeService */
+    private $getCurrentDateTime;
+
+    public function __construct(?GetCurrentDateTimeService $getCurrentDateTime = null)
+    {
+        $this->getCurrentDateTime = $getCurrentDateTime ?? new GetCurrentDateTimeService();
+    }
+
     public const RUN_EVERY_MAP = [
         'always' => 0,
         'fiveminutes' => 5,
@@ -80,20 +90,36 @@ class ScheduleItemModel
         return $this->isRunning = $isRunning ?? $this->isRunning;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $lastRunStartAt;
 
-    public function lastRunStartAt(?DateTime $lastRunStartAt = null) : ?DateTime
+    public function lastRunStartAt(?DateTimeInterface $lastRunStartAt = null) : ?DateTimeInterface
     {
-        return $this->lastRunStartAt = $lastRunStartAt ?? $this->lastRunStartAt;
+        if (! $lastRunStartAt) {
+            return $this->lastRunStartAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->lastRunStartAt = (new DateTimeImmutable())
+            ->setTimestamp($lastRunStartAt->getTimestamp());
+
+        return $this->lastRunStartAt;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $lastRunEndAt;
 
-    public function lastRunEndAt(?DateTime $lastRunEndAt = null) : ?DateTime
+    public function lastRunEndAt(?DateTimeInterface $lastRunEndAt = null) : ?DateTimeInterface
     {
-        return $this->lastRunEndAt = $lastRunEndAt ?? $this->lastRunEndAt;
+        if (! $lastRunEndAt) {
+            return $this->lastRunEndAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->lastRunEndAt = (new DateTimeImmutable())
+            ->setTimestamp($lastRunEndAt->getTimestamp());
+
+        return $this->lastRunEndAt;
     }
 
     /**
@@ -136,7 +162,7 @@ class ScheduleItemModel
     public function shouldRun() : bool
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currentTime = new DateTime();
+        $currentTime = $this->getCurrentDateTime->get();
 
         $currentTimeStamp = $currentTime->getTimestamp();
 
@@ -201,27 +227,27 @@ class ScheduleItemModel
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'mondayatmidnight' && $day === 'Monday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'tuesdayatmidnight' && $day === 'Tuesday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'wednesdayatmidnight' && $day === 'Wednesday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'thursdayatmidnight' && $day === 'Thursday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         return $runEvery === 'fridayatmidnight' && $day === 'Friday';
     }
 }

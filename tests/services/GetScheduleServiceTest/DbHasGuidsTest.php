@@ -159,22 +159,22 @@ class DbHasGuidsTest extends TestCase
             self::assertTrue($model->isRunning());
 
             self::assertEquals(
-                $lastRunStartAt->format('Y-m-d H:i:s'),
-                $model->lastRunStartAt()->format('Y-m-d H:i:s')
+                $lastRunStartAt->getTimestamp(),
+                $model->lastRunStartAt()->getTimestamp()
             );
 
             self::assertEquals(
-                $lastRunStartAt->getTimezone()->getName(),
+                (new DateTime())->getTimezone()->getName(),
                 $model->lastRunStartAt()->getTimezone()->getName()
             );
 
             self::assertEquals(
-                $lastRunEndAt->format('Y-m-d H:i:s'),
-                $model->lastRunEndAt()->format('Y-m-d H:i:s')
+                $lastRunEndAt->getTimestamp(),
+                $model->lastRunEndAt()->getTimestamp()
             );
 
             self::assertEquals(
-                $lastRunEndAt->getTimezone()->getName(),
+                (new DateTime())->getTimezone()->getName(),
                 $model->lastRunEndAt()->getTimezone()->getName()
             );
         }

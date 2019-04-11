@@ -82,7 +82,7 @@ class RunScheduleAction
         if (! $model->shouldRun()) {
             $this->consoleOutput->writeln(
                 '<fg=green>' . $model->class() . '::' . $model->method() .
-                    ' does not need run at this time</>'
+                    ' does not need to run at this time</>'
             );
 
             return;

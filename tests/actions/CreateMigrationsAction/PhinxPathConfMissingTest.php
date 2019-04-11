@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace corbomite\tests\actions\CreateMigrationsActionTest;
+namespace corbomite\tests\actions\CreateMigrationsAction;
 
 use corbomite\schedule\actions\CreateMigrationsAction;
 use corbomite\schedule\PhpCalls;

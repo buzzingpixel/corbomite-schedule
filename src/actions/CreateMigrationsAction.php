@@ -45,7 +45,7 @@ class CreateMigrationsAction
             throw new LogicException('phinx.php must be present in your project');
         }
 
-        $phinxConf = include $this->appBasePath . '/phinx.php';
+        $phinxConf = $this->phpCalls->include($this->appBasePath . '/phinx.php');
 
         $dest = $phinxConf['paths']['migrations'] ?? null;
 

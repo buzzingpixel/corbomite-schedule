@@ -38,7 +38,7 @@ In production you'll want to set it to run on a cron every minute. Here's an exa
 
 ## Registering a schedule
 
-Your app or compose package can provide a schedule. To do so, set a `scheduleConfigFilePath` key in the `extra` object of your composer.json:
+Your app or composer package can provide a schedule. To do so, set a `scheduleConfigFilePath` key in the `extra` object of your composer.json:
 
 ```json
 {

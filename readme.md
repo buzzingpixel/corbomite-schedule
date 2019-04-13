@@ -1,5 +1,7 @@
 # Corbomite Schedule
 
+<p><a href="https://travis-ci.org/buzzingpixel/corbomite-schedule"><img src="https://travis-ci.org/buzzingpixel/corbomite-schedule.svg?branch=master"></a></p>
+
 Part of BuzzingPixel's Corbomite project.
 
 Provides a method for scheduling things to run.

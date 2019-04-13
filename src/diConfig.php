@@ -1,42 +1,59 @@
 <?php
+
 declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
-
-use corbomite\di\Di;
-use corbomite\schedule\ScheduleApi;
-use corbomite\db\Factory as OrmFactory;
+use Composer\Autoload\ClassLoader;
 use corbomite\configcollector\Collector;
+use corbomite\db\Factory as OrmFactory;
+use corbomite\schedule\actions\CreateMigrationsAction;
 use corbomite\schedule\actions\RunScheduleAction;
+use corbomite\schedule\PhpCalls;
+use corbomite\schedule\ScheduleApi;
 use corbomite\schedule\services\GetScheduleService;
 use corbomite\schedule\services\SaveScheduleService;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use corbomite\schedule\actions\CreateMigrationsAction;
+use Symfony\Component\Filesystem\Filesystem;
 
 return [
-    CreateMigrationsAction::class => function () {
+    CreateMigrationsAction::class => static function () {
+        $appBasePath = null;
+
+        if (defined('APP_BASE_PATH')) {
+            $appBasePath = APP_BASE_PATH;
+        }
+
+        if (! $appBasePath) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $reflection = new ReflectionClass(ClassLoader::class);
+
+            $appBasePath = dirname($reflection->getFileName(), 3);
+        }
+
         return new CreateMigrationsAction(
             __DIR__ . '/migrations',
+            new ConsoleOutput(),
+            $appBasePath,
+            new Filesystem(),
+            new PhpCalls()
+        );
+    },
+    GetScheduleService::class => static function (ContainerInterface $di) {
+        return new GetScheduleService(
+            new OrmFactory(),
+            $di->get(Collector::class)
+        );
+    },
+    RunScheduleAction::class => static function (ContainerInterface $di) {
+        return new RunScheduleAction(
+            $di,
             new ConsoleOutput()
         );
     },
-    RunScheduleAction::class => function () {
-        return new RunScheduleAction(new Di(), new ConsoleOutput());
-    },
-    GetScheduleService::class => function () {
-        return new GetScheduleService(
-            new OrmFactory(),
-            Di::get(Collector::class)
-        );
-    },
-    SaveScheduleService::class => function () {
+    SaveScheduleService::class => static function () {
         return new SaveScheduleService(new OrmFactory());
     },
-    ScheduleApi::class => function () {
-        return new ScheduleApi(new Di());
+    ScheduleApi::class => static function (ContainerInterface $di) {
+        return new ScheduleApi($di);
     },
 ];

@@ -1,39 +1,34 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\schedule;
 
-use corbomite\di\Di;
 use corbomite\schedule\models\ScheduleItemModel;
 use corbomite\schedule\services\GetScheduleService;
 use corbomite\schedule\services\SaveScheduleService;
+use Psr\Container\ContainerInterface;
 
 class ScheduleApi
 {
+    /** @var ContainerInterface */
     private $di;
 
-    public function __construct(Di $di)
+    public function __construct(ContainerInterface $di)
     {
         $this->di = $di;
     }
 
-    public function getSchedule(): array
+    /**
+     * @return ScheduleItemModel[]
+     */
+    public function getSchedule() : array
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(GetScheduleService::class);
-        return $service();
+        return $this->di->get(GetScheduleService::class)->get();
     }
 
-    public function saveSchedule(ScheduleItemModel $model): void
+    public function saveSchedule(ScheduleItemModel $model) : void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(SaveScheduleService::class);
-        $service($model);
+        $this->di->get(SaveScheduleService::class)->save($model);
     }
 }

@@ -1,54 +1,55 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\schedule\actions;
 
-use DateTime;
-use Throwable;
-use DateTimeZone;
-use corbomite\di\Di;
-use corbomite\schedule\ScheduleApi;
 use corbomite\schedule\models\ScheduleItemModel;
+use corbomite\schedule\ScheduleApi;
+use DateTime;
+use DateTimeZone;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
+use function array_map;
+use function count;
 
 class RunScheduleAction
 {
+    /** @var ContainerInterface */
     private $di;
+    /** @var ScheduleApi */
     private $scheduleApi;
+    /** @var OutputInterface */
     private $consoleOutput;
 
     public function __construct(
-        Di $di,
+        ContainerInterface $di,
         OutputInterface $consoleOutput
     ) {
-        $this->di = $di;
+        $this->di            = $di;
         $this->consoleOutput = $consoleOutput;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->scheduleApi = $di->getFromDefinition(ScheduleApi::class);
+        $this->scheduleApi = $di->get(ScheduleApi::class);
     }
 
-    public function __invoke()
+    public function __invoke() : void
     {
         $schedule = $this->scheduleApi->getSchedule();
 
-        if (\count($schedule) < 1) {
+        if (count($schedule) < 1) {
             $this->consoleOutput->writeln(
                 '<fg=yellow>There are no scheduled commands set up</>'
             );
+
             return;
         }
 
         array_map([$this, 'runScheduledItem'], $schedule);
     }
 
-    private function runScheduledItem(ScheduleItemModel $model): void
+    private function runScheduledItem(ScheduleItemModel $model) : void
     {
         try {
             $this->runScheduleItemInner($model);
@@ -67,7 +68,7 @@ class RunScheduleAction
         }
     }
 
-    private function runScheduleItemInner(ScheduleItemModel $model): void
+    private function runScheduleItemInner(ScheduleItemModel $model) : void
     {
         if ($model->isRunning() && ! $model->shouldRun()) {
             $this->consoleOutput->writeln(
@@ -81,7 +82,7 @@ class RunScheduleAction
         if (! $model->shouldRun()) {
             $this->consoleOutput->writeln(
                 '<fg=green>' . $model->class() . '::' . $model->method() .
-                    ' does not need run at this time</>'
+                    ' does not need to run at this time</>'
             );
 
             return;
@@ -99,13 +100,13 @@ class RunScheduleAction
         $constructedClass = null;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        if ($this->di->hasDefinition($model->class())) {
+        if ($this->di->has($model->class())) {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $constructedClass = $this->di->makeFromDefinition($model->class());
+            $constructedClass = $this->di->get($model->class());
         }
 
         if (! $constructedClass) {
-            $class = $model->class();
+            $class            = $model->class();
             $constructedClass = new $class();
         }
 

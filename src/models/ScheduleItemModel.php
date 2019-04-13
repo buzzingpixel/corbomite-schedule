@@ -1,18 +1,25 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\schedule\models;
 
-use DateTime;
+use corbomite\schedule\services\GetCurrentDateTimeService;
+use DateTimeImmutable;
+use DateTimeInterface;
+use function is_numeric;
+use function mb_strtolower;
 
 class ScheduleItemModel
 {
+    /** @var GetCurrentDateTimeService */
+    private $getCurrentDateTime;
+
+    public function __construct(?GetCurrentDateTimeService $getCurrentDateTime = null)
+    {
+        $this->getCurrentDateTime = $getCurrentDateTime ?? new GetCurrentDateTimeService();
+    }
+
     public const RUN_EVERY_MAP = [
         'always' => 0,
         'fiveminutes' => 5,
@@ -43,55 +50,76 @@ class ScheduleItemModel
         'fridayatmidnight',
     ];
 
+    /** @var string */
     private $class = '';
 
-    public function class(?string $class = null): string
+    public function class(?string $class = null) : string
     {
         return $this->class = $class ?? $this->class;
     }
 
+    /** @var string */
     private $method = '__invoke';
 
-    public function method(?string $method = null): string
+    public function method(?string $method = null) : string
     {
         return $this->method = $method ?? $this->method;
     }
 
+    /** @var string */
     private $runEvery = 'Always';
 
-    public function runEvery(?string $runEvery = null): string
+    public function runEvery(?string $runEvery = null) : string
     {
         return $this->runEvery = $runEvery ?? $this->runEvery;
     }
 
+    /** @var string */
     private $guid = '';
 
-    public function guid(?string $guid = null): string
+    public function guid(?string $guid = null) : string
     {
         return $this->guid = $guid ?? $this->guid;
     }
 
+    /** @var bool */
     private $isRunning = false;
 
-    public function isRunning(?bool $isRunning = null): bool
+    public function isRunning(?bool $isRunning = null) : bool
     {
         return $this->isRunning = $isRunning ?? $this->isRunning;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $lastRunStartAt;
 
-    public function lastRunStartAt(?DateTime $lastRunStartAt = null): ?DateTime
+    public function lastRunStartAt(?DateTimeInterface $lastRunStartAt = null) : ?DateTimeInterface
     {
-        return $this->lastRunStartAt = $lastRunStartAt ?? $this->lastRunStartAt;
+        if (! $lastRunStartAt) {
+            return $this->lastRunStartAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->lastRunStartAt = (new DateTimeImmutable())
+            ->setTimestamp($lastRunStartAt->getTimestamp());
+
+        return $this->lastRunStartAt;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $lastRunEndAt;
 
-    public function lastRunEndAt(?DateTime $lastRunEndAt = null): ?DateTime
+    public function lastRunEndAt(?DateTimeInterface $lastRunEndAt = null) : ?DateTimeInterface
     {
-        return $this->lastRunEndAt = $lastRunEndAt ?? $this->lastRunEndAt;
+        if (! $lastRunEndAt) {
+            return $this->lastRunEndAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->lastRunEndAt = (new DateTimeImmutable())
+            ->setTimestamp($lastRunEndAt->getTimestamp());
+
+        return $this->lastRunEndAt;
     }
 
     /**
@@ -103,6 +131,8 @@ class ScheduleItemModel
      * - Else if the runEvery mapped value is numeric, it is minutes and will be
      * converted to seconds and returned
      * - Else the mapped value will be returned
+     *
+     * @return mixed
      */
     public function getTranslatedRunEvery()
     {
@@ -112,7 +142,7 @@ class ScheduleItemModel
             return ((int) $val) * 60;
         }
 
-        $val = strtolower($val);
+        $val = mb_strtolower($val);
 
         if (! isset(self::RUN_EVERY_MAP[$val])) {
             return 0;
@@ -120,18 +150,19 @@ class ScheduleItemModel
 
         $mappedVal = self::RUN_EVERY_MAP[$val];
 
-        if (\is_numeric($mappedVal)) {
+        if (is_numeric($mappedVal)) {
             $mappedVal = (int) $mappedVal;
+
             return $mappedVal * 60;
         }
 
         return $mappedVal;
     }
 
-    public function shouldRun(): bool
+    public function shouldRun() : bool
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currentTime = new DateTime();
+        $currentTime = $this->getCurrentDateTime->get();
 
         $currentTimeStamp = $currentTime->getTimestamp();
 
@@ -153,6 +184,7 @@ class ScheduleItemModel
         // If $runEvery is numeric we'll check if it's time to run based on that
         if (is_numeric($runEvery)) {
             $runEvery = (int) $runEvery;
+
             return $secondsSinceLastRun >= $runEvery;
         }
 
@@ -195,32 +227,27 @@ class ScheduleItemModel
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'mondayatmidnight' && $day === 'Monday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'tuesdayatmidnight' && $day === 'Tuesday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'wednesdayatmidnight' && $day === 'Wednesday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
+        // If we're running on Monday, and it's Monday, we should run
         if ($runEvery === 'thursdayatmidnight' && $day === 'Thursday') {
             return true;
         }
 
-        // If we're running on Monda, and it's Monday, we should run
-        if ($runEvery === 'fridayatmidnight' && $day === 'Friday') {
-            return true;
-        }
-
-        // We didn't have any matches and we shouldn't run
-        return false;
+        // If we're running on Monday, and it's Monday, we should run
+        return $runEvery === 'fridayatmidnight' && $day === 'Friday';
     }
 }

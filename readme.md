@@ -22,7 +22,7 @@ After running that command, you'll need to run the migrations:
 php app migrate/up
 ```
 
-### Running the queue
+### Running the schedule
 
 In dev, you'll probably just want to run the schedule manually. The command to do that is:
 
@@ -38,7 +38,7 @@ In production you'll want to set it to run on a cron every minute. Here's an exa
 
 ## Registering a schedule
 
-Your app or compose package can provide a schedule. To do so, set a `scheduleConfigFilePath` key in the `extra` object of your composer.json:
+Your app or composer package can provide a schedule. To do so, set a `scheduleConfigFilePath` key in the `extra` object of your composer.json:
 
 ```json
 {

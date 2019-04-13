@@ -13,12 +13,19 @@ phinx.php
 # Tools
 #------------------------------------
 
+.php_cs.cache
+.phpunit.result.cache
 /*-workspace
 /.env
 /node_modules
-/.idea
 /*.sublime-*
 /vendor/*
+
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/usage.statistics.xml
+/.idea/dictionaries
+/.idea/shelf
 
 
 
